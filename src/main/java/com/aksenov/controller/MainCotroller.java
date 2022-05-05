@@ -39,7 +39,7 @@ public class MainCotroller {
         if (filter != null && !filter.isEmpty())
             messages = messageRepository.findByTag(filter);
         else
-            messages = messageRepository.findAll();
+            messages = messageRepository.findAllByOrderByIdDesc();
 
         model.addAttribute("messages", messages);
         model.addAttribute("filer", filter);
@@ -72,7 +72,7 @@ public class MainCotroller {
 
         messageRepository.save(message);
 
-        Iterable<Message> messages = messageRepository.findAll();
+        Iterable<Message> messages = messageRepository.findAllByOrderByIdDesc();
 
         model.put("messages", messages);
 

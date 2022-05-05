@@ -1,39 +1,59 @@
 <#import "parts/common.ftlh" as c>
-<#import "parts/login.ftlh" as l>
 
 <@c.page>
-    <div>
-        <@l.logout/>
-        <span><a href="/user">User list</a></span>
-    </div>
-    <div>
-        <form method="post" enctype="multipart/form-data">
-            <input type="text" name="text" placeholder="Введите сообщение" />
-            <input type="text" name="tag" placeholder="Тэг">
-            <input type="file" name="file">
-            <input type="hidden" name="_csrf" value="${_csrf.token}" />
-            <button type="submit">Добавить</button>
-        </form>
+
+    <form method="get" action="/main" class="row align-items-center">
+        <div class="col-sm-5 mb-3">
+            <input type="text" name="filter" class="form-control" value="${filter?if_exists!}"
+                   placeholder="Search by tag">
+        </div>
+        <div class="col-sm-2 mb-3">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+       aria-controls="collapseExample">Add new message
+    </a>
+    <div class="collapse" id="collapseExample">
+        <div class="form-group mt-3">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" name="text" placeholder="Type your message"/>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" name="tag" placeholder="Tag">
+                </div>
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <input type="file" name="file" class="form-control" id="inputFile">
+                    </div>
+                </div>
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div>Список сообщений</div>
-    <form method="get" action="/main">
-        <input type="text" name="filter" value="${filter?if_exists!}" placeholder="Поиск по тэгу">
-        <button type="submit">Найти</button>
-    </form>
     <#list messages as message>
-        <div>
-            <b>${message.id}</b>
-            <span>${message.text}</span>
-            <i>${message.tag}</i>
-            <strong>${message.authorName}</strong>
+        <div id="message" class="card my-3 w-50 mx-auto">
             <div>
                 <#if message.filename??>
-                    <img src="img/${message.filename}"
+                    <img src="img/${message.filename}" class="card-img-top">
                 </#if>
+            </div>
+            <div class="m-2">
+                <span>${message.text}</span>
+                <i>${message.tag}</i>
+            </div>
+            <div class="card-footer text-muted text-center">
+                <div class="mx-auto"><i>Posted by</i> ${message.authorName}</div>
             </div>
         </div>
     <#else>
         No messages
     </#list>
+
 </@c.page>

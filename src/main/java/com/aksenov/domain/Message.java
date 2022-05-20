@@ -1,13 +1,21 @@
 package com.aksenov.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
+
+    @NotBlank(message = "Please enter the message")
+    @Length(max = 2048, message = "Message too long (more than 2048 symbols)")
     private String text;
+
+    @Length(max = 255, message = "Tag too long (more than 255 symbols)")
     private String tag;
 
     private String filename;

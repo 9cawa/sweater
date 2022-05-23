@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <input type="text" class="form-control"
-                           value="<#if message??>${message.tag}</#if> name="tag" placeholder="Tag">
+                           value="<#if message??>${message.tag}</#if>" name="tag" placeholder="Tag">
                     <#if tagError??>
                         <div class="invalid-feedback">
                             ${tagError}

@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -56,9 +57,9 @@ public class MainCotroller {
             @AuthenticationPrincipal User user,
             @Valid Message message,
             BindingResult bindingResult,
-            @RequestParam(value = "file", required = false) MultipartFile file,
-            Model model
-    ) throws IOException {
+            Model model,
+            @RequestParam(value = "file", required = false) MultipartFile file
+            ) throws IOException {
         message.setAuthor(user);
 
         if (bindingResult.hasErrors()) {
@@ -80,7 +81,10 @@ public class MainCotroller {
         return "main";
     }
 
-    private void saveFile(@Valid Message message,@RequestParam("file") MultipartFile file) throws IOException {
+    private void saveFile(
+            @Valid Message message,
+            @RequestParam(value = "file", required = false) MultipartFile file
+    ) throws IOException {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
 
@@ -105,6 +109,10 @@ public class MainCotroller {
     ) {
         Set<Message> messages = user.getMessages();
 
+        model.addAttribute("userChannel", user);
+        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
+        model.addAttribute("subscribersCount", user.getSubscribers().size());
+        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
         model.addAttribute("messages", messages);
         model.addAttribute("message", message);
         model.addAttribute("isCurrentUser", currentUser.equals(user));
@@ -119,7 +127,7 @@ public class MainCotroller {
             @RequestParam("id") Message message,
             @RequestParam("text") String text,
             @RequestParam("tag") String tag,
-            @RequestParam(value = "file", required = false) MultipartFile file
+            @RequestParam(value = "file") MultipartFile file
     ) throws IOException {
         if (message.getAuthor().equals(currentUser)) {
             if (!StringUtils.isEmpty(text)) {

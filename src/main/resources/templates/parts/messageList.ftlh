@@ -4,7 +4,7 @@
     <div id="message" class="card my-3 w-50 mx-auto">
         <div>
             <#if message.filename??>
-                <img src="img/${message.filename}" class="card-img-top">
+                <img src="/img/${message.filename}" class="card-img-top">
             </#if>
         </div>
         <div class="m-2">

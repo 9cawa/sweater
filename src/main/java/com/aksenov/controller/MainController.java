@@ -19,13 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 @Controller
-public class MainCotroller {
+public class MainController {
 
     @Autowired
     private MessageRepository messageRepository;

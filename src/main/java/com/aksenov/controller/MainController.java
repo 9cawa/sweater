@@ -5,6 +5,10 @@ import com.aksenov.domain.User;
 import com.aksenov.repos.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,15 +42,20 @@ public class MainController {
     }
 
     @GetMapping("/main")
-    public String main(@RequestParam(required = false) String filter, Model model) {
-        Iterable<Message> messages;
+    public String main(
+            @RequestParam(required = false) String filter,
+            Model model,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<Message> page;
 
         if (filter != null && !filter.isEmpty())
-            messages = messageRepository.findByTag(filter);
+            page = messageRepository.findByTag(filter, pageable);
         else
-            messages = messageRepository.findAllByOrderByIdDesc();
+            page = messageRepository.findAll(pageable);
 
-        model.addAttribute("messages", messages);
+        model.addAttribute("page", page);
+        model.addAttribute("url", "/main");
         model.addAttribute("filer", filter);
         return "main";
     }
@@ -73,7 +82,7 @@ public class MainController {
             messageRepository.save(message);
         }
 
-        Iterable<Message> messages = messageRepository.findAllByOrderByIdDesc();
+        Iterable<Message> messages = messageRepository.findAll();
 
         model.addAttribute("messages", messages);
 

@@ -1,15 +1,12 @@
 package com.aksenov.repos;
 
 import com.aksenov.domain.Message;
-import com.aksenov.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
-
 public interface MessageRepository extends CrudRepository<Message, Long> {
-    List<Message> findByTag(String tag);
+    Page<Message> findByTag(String tag, Pageable pageable);
 
-    List<Message> findAllByOrderByIdDesc();
-
-    List<Message> findAllByAuthor(User user);
+    Page<Message> findAll(Pageable pageable);
 }
